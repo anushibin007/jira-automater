@@ -20,6 +20,10 @@ public class FilterService {
 		return getRestClient().getSearchClient().searchJql(getFilter(filterID).getJql()).claim();
 	}
 
+	public SearchResult getFilterResult(String jqlString) {
+		return getRestClient().getSearchClient().searchJql(jqlString).claim();
+	}
+
 	private JiraRestClient getRestClient() {
 		return restClient.getJiraRestClient();
 	}

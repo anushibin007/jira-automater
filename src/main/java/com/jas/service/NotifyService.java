@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ import com.jas.thread.MailThread;
 import com.jas.util.FileUtils;
 import com.jas.util.JiraAutomaterPropService;
 
+// TODO: Add debug logs to all methods for entering, exiting, who's calling, whom the mail is sent to, etc
 @Service
 public class NotifyService {
 
@@ -33,24 +35,49 @@ public class NotifyService {
 	TaskExecutor taskExecutor;
 
 	@Autowired
-	MailThread mailThread;
+	private ApplicationContext ctx;
 
 	@Autowired
 	JiraAutomaterPropService jiraAutomaterProps;
 
 	public String notifyAllFilterSatisfiers() {
 		logger.trace("Entering notifyAllFilterSatisfiers");
+		StringBuilder result = new StringBuilder(50);
+
+		result.append("{ filtersToWatch.properties : ");
+
+		result.append(processFile("filtersToWatch.properties", true));
+
+		result.append(", jqlToWatch.properties : ");
+
+		result.append(processFile("jqlToWatch.properties", false));
+
+		result.append("}");
+
+		return result.toString();
+	}
+
+	private String processFile(String propertyFileName, boolean isFilterId) {
 		try {
-			List<String> filtersToWatch = FileUtils.fileToStringArray("filtersToWatch.properties");
+			List<String> filtersToWatch = FileUtils.fileToStringArray(propertyFileName);
 			if (filtersToWatch != null) {
-				for (String filter : filtersToWatch) {
-					Long filterID = Long.parseLong(filter);
-					notifyFilterSatisfiers(filterID);
+				for (String filterIdOrJql : filtersToWatch) {
+					if (!filterIdOrJql.startsWith("#")) {
+						if (isFilterId) {
+							Long filterID = Long.parseLong(filterIdOrJql);
+							notifyFilterSatisfiers(filterID);
+						} else {
+							// We process the string as a JQL if it is not a filter ID
+							notifyFilterSatisfiers(filterIdOrJql);
+						}
+					} else {
+						logger.debug("Ignoring commented line: " + filterIdOrJql);
+					}
 				}
 			}
 			return filtersToWatch == null ? "none" : filtersToWatch.toString();
 		} finally {
-			logger.trace("Leaving notifyAllFilterSatisfiers");
+			logger.trace("Leaving processFilterIds");
 		}
 	}
 
@@ -67,6 +94,29 @@ public class NotifyService {
 			logger.debug(userToIssuesMap.toString());
 
 			sendMail(userToIssuesMap, filterID, filter.getName());
+
+			return userToIssuesMap.toString();
+		} finally {
+			logger.trace("Leaving notifyFilterSatisfiers");
+		}
+	}
+
+	// TODO: Optimize redundant code notifyFilterSatisfiers(String jqlString) &
+	// notifyFilterSatisfiers(long filterID)
+	public String notifyFilterSatisfiers(String jqlString) {
+		logger.trace("Entering notifyFilterSatisfiers");
+		try {
+			Map<String, List<String>> userToIssuesMap = new HashMap<>();
+
+			SearchResult searchresult = filterServ.getFilterResult(jqlString);
+			for (Issue anIssue : searchresult.getIssues()) {
+				// TODO: redirect unassigned tickets to someone else
+				String emailId = anIssue.getAssignee() == null ? "" : anIssue.getAssignee().getEmailAddress();
+				addItem(userToIssuesMap, emailId, buildIssueDetails(anIssue));
+			}
+			logger.debug(userToIssuesMap.toString());
+
+			sendMail(userToIssuesMap, jqlString, "JQL: " + jqlString);
 
 			return userToIssuesMap.toString();
 		} finally {
@@ -116,6 +166,10 @@ public class NotifyService {
 	}
 
 	private void sendMail(Map<String, List<String>> userToIssuesMap, long filterID, String filterName) {
+		sendMail(userToIssuesMap, String.valueOf(filterID), filterName);
+	}
+
+	private void sendMail(Map<String, List<String>> userToIssuesMap, String filterID, String filterName) {
 		logger.trace("Entering sendMail");
 		for (Entry<String, List<String>> entrySet : userToIssuesMap.entrySet()) {
 			String mailId = entrySet.getKey();
@@ -150,12 +204,13 @@ public class NotifyService {
 
 				mail.setMsgBody(html.toString());
 
+				MailThread mailThread = ctx.getBean(MailThread.class);
 				mailThread.setMail(mail);
 				taskExecutor.execute(mailThread);
 
 				logger.debug("Sent mail to " + mail + " for filterID " + filterID);
 			} else {
-				logger.debug("Skipping mail to " + mailId);
+				logger.debug("Skipping mail to [" + mailId + "]");
 			}
 		}
 		logger.trace("Leaving sendMail");
