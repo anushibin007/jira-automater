@@ -11,9 +11,9 @@ import com.jas.service.MailService;
 @Component
 public class MailThread implements Runnable {
 
-	private static final Logger logger = LoggerFactory.getLogger(MailThread.class);
+	private final Logger logger = LoggerFactory.getLogger(MailThread.class);
 
-	MailDetails mail;
+	private MailDetails mail;
 
 	@Autowired
 	MailService mailServ;
@@ -31,9 +31,10 @@ public class MailThread implements Runnable {
 		if (mail == null) {
 			throw new NullPointerException("mail is null in " + this.getClass().getName() + ". Cannot send mail");
 		}
-		logger.debug("Sending " + mail.hashCode());
+		logger.debug("Sending mail[" + mail.hashCode() + "]");
 		mailServ.sendMail(mail);
 		logger.debug("Sent " + mail.hashCode());
+		this.mail = null;
 	}
 
 }

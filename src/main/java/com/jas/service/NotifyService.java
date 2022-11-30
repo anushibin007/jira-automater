@@ -33,56 +33,70 @@ public class NotifyService {
 	TaskExecutor taskExecutor;
 
 	@Autowired
-	MailThread mailServ;
+	MailThread mailThread;
 
 	@Autowired
 	JiraAutomaterPropService jiraAutomaterProps;
 
 	public String notifyAllFilterSatisfiers() {
-		List<String> filtersToWatch = FileUtils.fileToStringArray("filtersToWatch.properties");
-		if (filtersToWatch != null) {
-			for (String filter : filtersToWatch) {
-				Long filterID = Long.parseLong(filter);
-				notifyFilterSatisfiers(filterID);
+		logger.trace("Entering notifyAllFilterSatisfiers");
+		try {
+			List<String> filtersToWatch = FileUtils.fileToStringArray("filtersToWatch.properties");
+			if (filtersToWatch != null) {
+				for (String filter : filtersToWatch) {
+					Long filterID = Long.parseLong(filter);
+					notifyFilterSatisfiers(filterID);
+				}
 			}
+			return filtersToWatch == null ? "none" : filtersToWatch.toString();
+		} finally {
+			logger.trace("Leaving notifyAllFilterSatisfiers");
 		}
-		return filtersToWatch == null ? "none" : filtersToWatch.toString();
 	}
 
 	public String notifyFilterSatisfiers(long filterID) {
+		logger.trace("Entering notifyFilterSatisfiers");
+		try {
+			Map<String, List<String>> userToIssuesMap = new HashMap<>();
 
-		Map<String, List<String>> userToIssuesMap = new HashMap<>();
+			Filter filter = filterServ.getFilter(filterID);
+			SearchResult searchresult = filterServ.getFilterResult(filter);
+			for (Issue anIssue : searchresult.getIssues()) {
+				addItem(userToIssuesMap, anIssue.getAssignee().getEmailAddress(), buildIssueDetails(anIssue));
+			}
+			logger.debug(userToIssuesMap.toString());
 
-		Filter filter = filterServ.getFilter(filterID);
-		SearchResult searchresult = filterServ.getFilterResult(filter);
-		for (Issue anIssue : searchresult.getIssues()) {
-			addItem(userToIssuesMap, anIssue.getAssignee().getEmailAddress(), buildIssueDetails(anIssue));
+			sendMail(userToIssuesMap, filterID, filter.getName());
+
+			return userToIssuesMap.toString();
+		} finally {
+			logger.trace("Leaving notifyFilterSatisfiers");
 		}
-		logger.debug(userToIssuesMap.toString());
-
-		sendMail(userToIssuesMap, filterID, filter.getName());
-
-		return userToIssuesMap.toString();
 	}
 
 	private String buildIssueDetails(Issue anIssue) {
-		// TODO URL or Entity encode this
-		StringBuilder result = new StringBuilder(50);
+		logger.trace("Entering buildIssueDetails");
+		try {
+			// TODO URL or Entity encode this
+			StringBuilder result = new StringBuilder(50);
 
-		// <a href='https://jira.organization.com/browse/PROJ-125'>PROJ-125</a>
-		result.append("<a href='");
-		result.append(jiraAutomaterProps.getJiraServerUrl());
-		result.append("/browse/");
-		result.append(anIssue.getKey());
-		result.append("'>");
-		result.append(anIssue.getKey());
-		result.append("</a>");
+			// <a href='https://jira.organization.com/browse/PROJ-125'>PROJ-125</a>
+			result.append("<a href='");
+			result.append(jiraAutomaterProps.getJiraServerUrl());
+			result.append("/browse/");
+			result.append(anIssue.getKey());
+			result.append("'>");
+			result.append(anIssue.getKey());
+			result.append("</a>");
 
-		// (JIRA Summary)
-		result.append(" (");
-		result.append(anIssue.getSummary());
-		result.append(")");
-		return result.toString();
+			// (JIRA Summary)
+			result.append(" (");
+			result.append(anIssue.getSummary());
+			result.append(")");
+			return result.toString();
+		} finally {
+			logger.trace("Leaving buildIssueDetails");
+		}
 	}
 
 	private void addItem(Map<String, List<String>> userToIssuesMap, String user, String issue) {
@@ -102,9 +116,8 @@ public class NotifyService {
 	}
 
 	private void sendMail(Map<String, List<String>> userToIssuesMap, long filterID, String filterName) {
-
+		logger.trace("Entering sendMail");
 		for (Entry<String, List<String>> entrySet : userToIssuesMap.entrySet()) {
-
 			String mailId = entrySet.getKey();
 			if (MailService.safeRecipients.contains(mailId)) {
 				List<String> issues = entrySet.getValue();
@@ -137,14 +150,15 @@ public class NotifyService {
 
 				mail.setMsgBody(html.toString());
 
-				mailServ.setMail(mail);
-				taskExecutor.execute(mailServ);
+				mailThread.setMail(mail);
+				taskExecutor.execute(mailThread);
 
 				logger.debug("Sent mail to " + mail + " for filterID " + filterID);
 			} else {
 				logger.debug("Skipping mail to " + mailId);
 			}
 		}
+		logger.trace("Leaving sendMail");
 	}
 
 }
