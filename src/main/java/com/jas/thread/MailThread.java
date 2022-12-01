@@ -33,9 +33,9 @@ public class MailThread implements Runnable {
 		if (mail == null) {
 			throw new NullPointerException("mail is null in " + this.getClass().getName() + ". Cannot send mail");
 		}
-		logger.debug("Sending mail[" + mail.hashCode() + "]");
+		logger.debug("Sending mail[" + mail.hashCode() + "] to [" + mail.getRecipient() + "]");
 		mailServ.sendMail(mail);
-		logger.debug("Sent " + mail.hashCode());
+		logger.debug("Sent mail[" + mail.hashCode() + "] to [" + mail.getRecipient() + "]");
 		this.mail = null;
 	}
 

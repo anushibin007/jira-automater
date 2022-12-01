@@ -123,7 +123,7 @@ public class NotifyService {
 			SearchResult searchresult = filterServ.getFilterResult(filter);
 			for (Issue anIssue : searchresult.getIssues()) {
 				String emailId = anIssue.getAssignee() == null ? "" : anIssue.getAssignee().getEmailAddress();
-				addItem(userToIssuesMap, emailId, buildIssueDetails(anIssue));
+				appendToMap(userToIssuesMap, emailId, buildIssueDetails(anIssue));
 			}
 			logger.debug(userToIssuesMap.toString());
 
@@ -146,7 +146,7 @@ public class NotifyService {
 			for (Issue anIssue : searchresult.getIssues()) {
 				// TODO: redirect unassigned tickets to someone else
 				String emailId = anIssue.getAssignee() == null ? "" : anIssue.getAssignee().getEmailAddress();
-				addItem(userToIssuesMap, emailId, buildIssueDetails(anIssue));
+				appendToMap(userToIssuesMap, emailId, buildIssueDetails(anIssue));
 			}
 			logger.debug(userToIssuesMap.toString());
 
@@ -183,7 +183,7 @@ public class NotifyService {
 		}
 	}
 
-	private void addItem(Map<String, List<String>> userToIssuesMap, String user, String issue) {
+	private void appendToMap(Map<String, List<String>> userToIssuesMap, String user, String issue) {
 		List<String> existingIssues = userToIssuesMap.get(user);
 		if (userToIssuesMap != null && user != null && issue != null) {
 			if (userToIssuesMap.get(user) == null) {
@@ -195,7 +195,7 @@ public class NotifyService {
 				existingIssues.add(issue);
 			}
 		} else {
-			logger.debug("Skipped as one of userToIssuesMap[<masked>], user[" + user + "], issue[" + issue + "]");
+			logger.debug("Skipped as one of userToIssuesMap[<masked>], user[" + user + "], issue[" + issue + "] was null");
 		}
 	}
 
