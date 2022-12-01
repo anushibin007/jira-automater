@@ -1,14 +1,17 @@
-{
-	"properties": [
-		{
-			"name": "jira.automater.interval.cron",
-			"type": "java.lang.String",
-			"description": "The cron time at which the jira-automater tool runs. This is mainly to specify at which the notifications are sent to the email recepients"
-		},
-		{
-			"name": "jira.automater.interval.initialDelay",
-			"type": "java.lang.String",
-			"description": "The initial delay before which the first execution is triggered."
-		}
-	]
-}
+{"properties": [
+  {
+    "name": "jira.automater.interval.cron",
+    "type": "java.lang.String",
+    "description": "The cron time at which the jira-automater tool runs. This is mainly to specify at which the notifications are sent to the email recepients"
+  },
+  {
+    "name": "jira.automater.interval.initialDelay",
+    "type": "java.lang.String",
+    "description": "The initial delay before which the first execution is triggered."
+  },
+  {
+    "name": "spring.mail.bcc",
+    "type": "java.lang.String",
+    "description": "A comma seperated list of mail IDs to whom all the mails should be BCCd to"
+  }
+]}
