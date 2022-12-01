@@ -10,10 +10,24 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 public class FileUtils {
+
 	public static List<String> fileToStringArray(String fileName) {
+		return fileToStringArray(fileName, true);
+	}
+
+	public static List<String> fileToStringArray(String fileName, boolean skipCommentsAndEmptyLines) {
 		Resource resource = new ClassPathResource(fileName);
 		try {
-			return Files.readAllLines(Paths.get(resource.getURI()), Charset.defaultCharset());
+			List<String> lines = Files.readAllLines(Paths.get(resource.getURI()), Charset.defaultCharset());
+			if (skipCommentsAndEmptyLines) {
+				for (int i = 0; i < lines.size(); i++) {
+					String trimmedLine = lines.get(i).trim();
+					if (trimmedLine.isEmpty() || trimmedLine.startsWith("#")) {
+						lines.remove(i);
+					}
+				}
+			}
+			return lines;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;

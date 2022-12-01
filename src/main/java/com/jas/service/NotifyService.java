@@ -97,21 +97,15 @@ public class NotifyService {
 			if (filtersToWatch != null) {
 				for (String filterIdOrJql : filtersToWatch) {
 					Map<String, List<String>> filterResult = null;
-					if (filterIdOrJql == null || filterIdOrJql.isEmpty()) {
-						logger.debug("Ignoring empty line");
-					} else if (filterIdOrJql.startsWith("#")) {
-						logger.debug("Ignoring commented line: [" + filterIdOrJql + "]");
+					logger.debug("Processing line: [" + filterIdOrJql + "]");
+					if (isFilterId) {
+						Long filterID = Long.parseLong(filterIdOrJql);
+						filterResult = notifyFilterSatisfiers(filterID);
 					} else {
-						logger.debug("Processing line: [" + filterIdOrJql + "]");
-						if (isFilterId) {
-							Long filterID = Long.parseLong(filterIdOrJql);
-							filterResult = notifyFilterSatisfiers(filterID);
-						} else {
-							// We process the string as a JQL if it is not a filter ID
-							filterResult = notifyFilterSatisfiers(filterIdOrJql);
-						}
-						buildFilterResultsForJql(filterIdOrJql, filterResult);
+						// We process the string as a JQL if it is not a filter ID
+						filterResult = notifyFilterSatisfiers(filterIdOrJql);
 					}
+					buildFilterResultsForJql(filterIdOrJql, filterResult);
 				}
 			}
 			return filtersToWatch == null ? "none" : filtersToWatch.toString();
