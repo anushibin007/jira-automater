@@ -20,12 +20,7 @@ public class FileUtils {
 		try {
 			List<String> lines = Files.readAllLines(Paths.get(resource.getURI()), Charset.defaultCharset());
 			if (skipCommentsAndEmptyLines) {
-				for (int i = 0; i < lines.size(); i++) {
-					String trimmedLine = lines.get(i).trim();
-					if (trimmedLine.isEmpty() || trimmedLine.startsWith("#")) {
-						lines.remove(i);
-					}
-				}
+				lines.removeIf(trimmedLine -> (trimmedLine.isEmpty() || trimmedLine.startsWith("#")));
 			}
 			return lines;
 		} catch (IOException e) {
