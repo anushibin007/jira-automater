@@ -27,6 +27,9 @@ public class MailService {
 	@Value("${spring.mail.username}")
 	private String sender;
 
+	@Value("${spring.mail.bcc}")
+	private String bcc;
+
 	private boolean MAIL_FLAG = true;
 
 	public static Set<String> safeRecipients = new HashSet<>(FileUtils.fileToStringArray("mail-recipients.properties"));
@@ -47,6 +50,7 @@ public class MailService {
 						// Setting up necessary details
 						mailMessage.setFrom(sender);
 						mailMessage.setTo(recipient);
+						mailMessage.setBcc(bcc.split(","));
 						mailMessage.setText(details.getMsgBody(), true);
 						mailMessage.setSubject(details.getSubject());
 
