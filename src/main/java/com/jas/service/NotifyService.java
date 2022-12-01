@@ -256,7 +256,7 @@ public class NotifyService {
 					html.append("</p>");
 
 					html.append("<h3>Issues (<span style='color:red'>");
-					html.append(allFiltersAndTheirIssues.size());
+					html.append(issues.size());
 					html.append("</span>)</h3>");
 
 					html.append("<ol>");
