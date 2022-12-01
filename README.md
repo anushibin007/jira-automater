@@ -19,4 +19,12 @@ Here are the steps to setup a development environment for jira-automater:
 1. Fork this repo and clone it to your localhost
 2. Edit and update the following files with necessary information:
 
-||File||Optional/Mandatory||
+Note: All property files support commenting. All property files ignore empty lines.
+
+|File|Description|Optional/Mandatory|
+|----|-----------|------------------|
+|[application.properties](src/main/resources/application.properties)|Contains<ul><li>All Spring Boot related properties</li><li>Mail Server Properties</li><li>Mail Sender & BCC Properties</li><li>Logging properties</li><li>Cron JOB properties</li></ul>|Mandatory|
+|[filtersToWatch.properties](src/main/resources/filtersToWatch.properties)|Each line in this file is a valid JIRA filter ID|Optional|
+|[jqlToWatch.properties](src/main/resources/jqlToWatch.properties)|Each line in this file is a valid JIRA Query Language (JQL) String|Optional|
+|[jira-automater.properties](src/main/resources/jira-automater.properties)|he JIRA Server URL and Credentials are configured here|Mandatory|
+|[mail-recipients.properties](src/main/resources/mail-recipients.properties)|<ul><li>Each line in this file is a mail ID to which JIRA Automater is allowed to send mails</li><li>If there is no entry for a particular mail ID which satisifies a filter, then no mail is sent even to the BCC recepient</li></ul>|Optional|
