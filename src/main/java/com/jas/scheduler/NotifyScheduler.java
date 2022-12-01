@@ -1,7 +1,5 @@
 package com.jas.scheduler;
 
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,7 @@ public class NotifyScheduler {
 	@Autowired
 	NotifyService notifyServ;
 
-	@Scheduled(fixedRateString = "${jira.automater.interval.hours}", initialDelayString = "${jira.automater.interval.initialDelay}", timeUnit = TimeUnit.HOURS)
+	@Scheduled(cron = "${jira.automater.interval.cron}")
 	public void notifyAllFilterSatisfiers() {
 		logger.debug("Scheduler is invoking notifyAllFilterSatisfiers at " + System.currentTimeMillis());
 		notifyServ.notifyAllFilterSatisfiers();

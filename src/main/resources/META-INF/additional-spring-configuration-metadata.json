@@ -1,9 +1,9 @@
 {
 	"properties": [
 		{
-			"name": "jira.automater.interval.hours",
+			"name": "jira.automater.interval.cron",
 			"type": "java.lang.String",
-			"description": "The interval (in hours) at which the jira-automater tool runs. This is mainly to specify at which the notifications are sent to the email recepients"
+			"description": "The cron time at which the jira-automater tool runs. This is mainly to specify at which the notifications are sent to the email recepients"
 		},
 		{
 			"name": "jira.automater.interval.initialDelay",
