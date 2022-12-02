@@ -12,6 +12,19 @@ This project was developed as a side project to notify teammates about subtle it
 
 All of the above items can be configured as JQLs or saved JIRA filters.
 
+## Docker Image
+
+A Continuous Build of the Docker Image happens every time the code changes.
+
+Link: [jiraautomater on Docker Hub](https://hub.docker.com/r/anushibin007/jiraautomater)
+
+The latest Docker Image can be pulled from Docker Hub using the following commands:
+
+```console
+docker pull anushibin007/jiraautomater
+docker run -d -p8080:8080 --name jiraautomater anushibin007/jiraautomater
+```
+
 ## Setup Instructions
 
 Here are the steps to setup a development environment for jira-automater:
