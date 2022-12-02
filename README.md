@@ -19,7 +19,7 @@ Here are the steps to setup a development environment for jira-automater:
 1. Fork this repo and clone it to your localhost
 2. Edit and update the following files with necessary information:
 
-Note: All property files support commenting. All property files ignore empty lines.
+**Note:** All property files support commenting with a "`#`" symbol. All property files ignore empty lines.
 
 |File|Description|Optional/Mandatory|
 |----|-----------|------------------|
