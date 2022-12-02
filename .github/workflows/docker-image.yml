@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Login to Docker Hub
-      run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p {{ secrets.DOCKER_HUB_TOKEN_OR_PASSWORD }}
+      run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_TOKEN_OR_PASSWORD }}
     - name: Build the Docker image
       run: docker build --file Dockerfile --progress plain --tag anushibin007/jiraautomater:latest .
     - name: Push the Image to Docker Hub
