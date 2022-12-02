@@ -30,7 +30,8 @@ docker run -d -p8080:8080 --name jira-automater anushibin007/jira-automater
 Here are the steps to setup a development environment for jira-automater:
 
 1. Fork this repo and clone it to your localhost
-2. Edit and update the following files with necessary information:
+2. Run [setupEnv.cmd](setupEnv.cmd) to stop tracking files that have confidential info.
+3. Edit and update the following files with necessary information:
 
 **Note:** All property files support commenting with a "`#`" symbol. All property files ignore empty lines.
 
