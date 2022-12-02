@@ -16,13 +16,13 @@ All of the above items can be configured as JQLs or saved JIRA filters.
 
 A Continuous Build of the Docker Image happens every time the code changes.
 
-Link: [jiraautomater on Docker Hub](https://hub.docker.com/r/anushibin007/jiraautomater)
+Link: [jira-automater on Docker Hub](https://hub.docker.com/r/anushibin007/jira-automater)
 
 The latest Docker Image can be pulled from Docker Hub using the following commands:
 
 ```console
-docker pull anushibin007/jiraautomater
-docker run -d -p8080:8080 --name jiraautomater anushibin007/jiraautomater
+docker pull anushibin007/jira-automater
+docker run -d -p8080:8080 --name jira-automater anushibin007/jira-automater
 ```
 
 ## Setup Instructions

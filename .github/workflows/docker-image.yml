@@ -17,6 +17,6 @@ jobs:
     - name: Login to Docker Hub
       run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_TOKEN_OR_PASSWORD }}
     - name: Build the Docker image
-      run: docker build --file Dockerfile --progress plain --tag anushibin007/jiraautomater:latest .
+      run: docker build --file Dockerfile --progress plain --tag anushibin007/jira-automater:latest .
     - name: Push the Image to Docker Hub
-      run: docker push anushibin007/jiraautomater:latest
+      run: docker push anushibin007/jira-automater:latest

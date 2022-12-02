@@ -1,8 +1,8 @@
 version: '3.4'
 
 services:
-  jiraautomater:
-    image: jiraautomater
+  jira-automater:
+    image: jira-automater
     build:
       context: .
       dockerfile: ./Dockerfile
