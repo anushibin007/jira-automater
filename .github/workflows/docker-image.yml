@@ -15,4 +15,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build --file Dockerfile --progress plain --tag jiraautomater:latest .
+    - run: docker login -u ${DOCKER_HUB_USERNAME} -p {DOCKER_HUB_TOKEN_OR_PASSWORD}
+    - run: docker build --file Dockerfile --progress plain --tag anushibin007/jiraautomater:latest .
+    - run: docker push anushibin007/jiraautomater:latest
