@@ -1,42 +1,54 @@
 package com.jas.util;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@PropertySource("jira-automater.properties")
-public class JiraAutomaterPropService {
-	@Value("${jira.server.url}")
-	String jiraServerUrl;
+@ConfigurationProperties(prefix = Constants.JIRA_AUTOMATER_JIRA_SERVER_PROP_PREFIX)
+public class JiraAutomaterPropService implements Constants {
 
-	@Value("${jira.server.username}")
-	String jiraServerUsername;
+	String url;
 
-	@Value("${jira.server.password}")
-	String jiraServerPassword;
+	String username;
 
-	public String getJiraServerUrl() {
-		return jiraServerUrl;
+	String password;
+
+	public String getUrl() {
+		return url;
 	}
 
-	public String getJiraServerUsername() {
-		return jiraServerUsername;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
-	public String getJiraServerPassword() {
-		return jiraServerPassword;
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public void validate() {
-		if (jiraServerUrl == null || jiraServerUrl.isEmpty()) {
-			throw new NullPointerException("jira.server.url is either not present or is empty in jira-automater.properties");
+		if (url == null || url.isEmpty()) {
+			throw new NullPointerException(JIRA_AUTOMATER_JIRA_SERVER_PROP_PREFIX
+					+ ".url is either not present or is empty in jira-automater.properties");
 		}
-		if (jiraServerUsername == null || jiraServerUsername.isEmpty()) {
-			throw new NullPointerException("jira.server.username is either not present or is empty in jira-automater.properties");
+		if (username == null || username.isEmpty()) {
+			throw new NullPointerException(JIRA_AUTOMATER_JIRA_SERVER_PROP_PREFIX
+					+ ".username is either not present or is empty in jira-automater.properties");
 		}
-		if (jiraServerPassword == null || jiraServerPassword.isEmpty()) {
-			throw new NullPointerException("jira.server.password is either not present or is empty in jira-automater.properties");
+		if (password == null || password.isEmpty()) {
+			throw new NullPointerException(JIRA_AUTOMATER_JIRA_SERVER_PROP_PREFIX
+					+ ".password is either not present or is empty in jira-automater.properties");
 		}
 	}
 
