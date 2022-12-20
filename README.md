@@ -30,15 +30,6 @@ docker run -d -p8080:8080 --name jira-automater anushibin007/jira-automater
 Here are the steps to setup a development environment for jira-automater:
 
 1. Fork this repo and clone it to your localhost
-2. Run [setupEnv.cmd](setupEnv.cmd) to stop tracking files that have confidential info.
-3. Edit and update the following files with necessary information:
-
-**Note:** All property files support commenting with a "`#`" symbol. All property files ignore empty lines.
-
-|File|Description|Optional/Mandatory|
-|----|-----------|------------------|
-|[application.properties](src/main/resources/application.properties)|Contains<ul><li>All Spring Boot related properties</li><li>Mail Server Properties</li><li>Mail Sender & BCC Properties</li><li>Logging properties</li><li>Cron JOB properties</li></ul>|Mandatory|
-|[filtersToWatch.properties](src/main/resources/filtersToWatch.properties)|Each line in this file is a valid JIRA filter ID|Optional|
-|[jqlToWatch.properties](src/main/resources/jqlToWatch.properties)|Each line in this file is a valid JIRA Query Language (JQL) String|Optional|
-|[jira-automater.properties](src/main/resources/jira-automater.properties)|The JIRA Server URL and Credentials are configured here|Mandatory|
-|[mail-recipients.properties](src/main/resources/mail-recipients.properties)|<ul><li>Each line in this file is a mail ID to which JIRA Automater is allowed to send mails</li><li>If there is no entry for a particular mail ID which satisifies a filter, then no mail is sent even to the BCC recepient</li></ul>|Optional|
+2. Copy [application.properties](src/main/resources/application.properties) and name it to `application-dev.properties`
+3. Update all the configuration properties to this file. This file is not version-tracked and can be used for development purposes.
+4. Run [startApp.cmd](./startApp-dev.cmd) to start the Development Server.
