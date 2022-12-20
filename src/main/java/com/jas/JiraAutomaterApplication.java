@@ -8,14 +8,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.jas.util.JiraAutomaterPropService;
+import com.jas.util.JiraAutomaterServerPropService;
 import com.jas.util.MailServerPropService;
 
 @SpringBootApplication
 public class JiraAutomaterApplication {
 
 	@Autowired
-	JiraAutomaterPropService jiraAutomaterPropService;
+	JiraAutomaterServerPropService jiraAutomaterPropService;
 
 	@Autowired
 	MailServerPropService mailServerPropService;

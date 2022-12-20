@@ -21,7 +21,8 @@ import com.atlassian.jira.rest.client.api.domain.SearchResult;
 import com.jas.pojo.MailDetails;
 import com.jas.thread.MailThread;
 import com.jas.util.FileUtils;
-import com.jas.util.JiraAutomaterPropService;
+import com.jas.util.JiraAutomaterServerPropService;
+import com.jas.util.MailRecepientsService;
 
 // TODO: Add debug logs to all methods for entering, exiting, who's calling, whom the mail is sent to, etc
 @Service
@@ -39,7 +40,10 @@ public class NotifyService {
 	private ApplicationContext ctx;
 
 	@Autowired
-	JiraAutomaterPropService jiraAutomaterProps;
+	JiraAutomaterServerPropService jiraAutomaterProps;
+
+	@Autowired
+	private MailRecepientsService mailRecepService;
 
 	/**
 	 * Think of it like this JSON:
@@ -166,7 +170,7 @@ public class NotifyService {
 
 			// <a href='https://jira.organization.com/browse/PROJ-125'>PROJ-125</a>
 			result.append("<a href='");
-			result.append(jiraAutomaterProps.getJiraServerUrl());
+			result.append(jiraAutomaterProps.getUrl());
 			result.append("/browse/");
 			result.append(anIssue.getKey());
 			result.append("'>");
@@ -195,7 +199,8 @@ public class NotifyService {
 				existingIssues.add(issue);
 			}
 		} else {
-			logger.debug("Skipped as one of userToIssuesMap[<masked>], user[" + user + "], issue[" + issue + "] was null");
+			logger.debug(
+					"Skipped as one of userToIssuesMap[<masked>], user[" + user + "], issue[" + issue + "] was null");
 		}
 	}
 
@@ -227,7 +232,7 @@ public class NotifyService {
 
 		for (Entry<String, Map<String, List<String>>> entrySet : userToIssues.entrySet()) {
 			String mailId = entrySet.getKey();
-			if (mailId != null && !mailId.isEmpty() && MailService.safeRecipients.contains(mailId)) {
+			if (mailId != null && !mailId.isEmpty() && mailRecepService.getSafeRecipients().contains(mailId)) {
 
 				logger.debug("Building mail for [" + mailId + "]");
 

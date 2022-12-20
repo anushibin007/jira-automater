@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = Constants.JIRA_AUTOMATER_JIRA_SERVER_PROP_PREFIX)
-public class JiraAutomaterPropService implements Constants {
+public class JiraAutomaterServerPropService implements Constants {
 
 	String url;
 

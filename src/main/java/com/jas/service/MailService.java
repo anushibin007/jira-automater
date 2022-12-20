@@ -1,8 +1,5 @@
 package com.jas.service;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
@@ -14,7 +11,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import com.jas.pojo.MailDetails;
-import com.jas.util.FileUtils;
+import com.jas.util.MailRecepientsService;
 
 @Service
 public class MailService {
@@ -24,6 +21,9 @@ public class MailService {
 	@Autowired
 	private JavaMailSender javaMailSender;
 
+	@Autowired
+	private MailRecepientsService mailRecepService;
+
 	@Value("${spring.mail.username}")
 	private String sender;
 
@@ -32,13 +32,11 @@ public class MailService {
 
 	private boolean MAIL_FLAG = true;
 
-	public static Set<String> safeRecipients = new HashSet<>(FileUtils.fileToStringArray("mail-recipients.properties"));
-
 	public String sendMail(MailDetails details) {
 		if (MAIL_FLAG) {
 			if (details != null) {
 				String recipient = details.getRecipient();
-				if (recipient != null && safeRecipients.contains(recipient)) {
+				if (recipient != null && mailRecepService.getSafeRecipients().contains(recipient)) {
 					logger.debug("Sending mail at " + System.currentTimeMillis());
 					try {
 
