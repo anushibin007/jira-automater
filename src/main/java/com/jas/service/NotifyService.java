@@ -82,6 +82,16 @@ public class NotifyService {
 					processUsersSatisfyingFilterId(filterID);
 				}
 			}
+			Map<String, String> jqlsToWatch = clientProps.getJql();
+			if (jqlsToWatch != null) {
+				for (Entry<String, String> aJql : jqlsToWatch.entrySet()) {
+					String jqlName = aJql.getKey();
+					String jql = aJql.getValue();
+
+					logger.debug("Processing jqlName[" + jqlName + "]");
+					processUsersSatisfyingJQL(jqlName, jql);
+				}
+			}
 		} finally {
 			logger.trace("Leaving processAllSatisfiers");
 		}
@@ -94,10 +104,32 @@ public class NotifyService {
 			SearchResult searchresult = filterServ.getFilterResult(filter);
 			for (Issue anIssue : searchresult.getIssues()) {
 				String emailId = anIssue.getAssignee() == null ? "" : anIssue.getAssignee().getEmailAddress();
-				notifyResult.appendToMap(emailId, String.valueOf(filterID), helper.buildIssueDetails(anIssue));
+				notifyResult.appendToMap(emailId, helper.buildFilterDetails(filter), helper.buildIssueDetails(anIssue));
 			}
 		} finally {
 			logger.trace("Leaving processUsersSatisfyingFilterId");
+		}
+	}
+
+	private void processUsersSatisfyingJQL(String jqlName, String jql) {
+		logger.trace("Entering processUsersSatisfyingJQL");
+		if (jqlName == null || jqlName.isEmpty()) {
+			logger.warn("jqlName[" + jqlName + "] was invalid");
+			return;
+		}
+		if (jql == null || jql.isEmpty()) {
+			logger.warn("jql[" + jql + "] was invalid");
+			return;
+		}
+		try {
+			SearchResult searchresult = filterServ.getFilterResult(jql);
+			for (Issue anIssue : searchresult.getIssues()) {
+				String emailId = anIssue.getAssignee() == null ? "" : anIssue.getAssignee().getEmailAddress();
+				notifyResult.appendToMap(emailId, helper.buildJqlDetails(jqlName, jql),
+						helper.buildIssueDetails(anIssue));
+			}
+		} finally {
+			logger.trace("Leaving processUsersSatisfyingJQL");
 		}
 	}
 
@@ -138,13 +170,9 @@ public class NotifyService {
 				String filterID = aFilterAndItsIssues.getKey();
 				List<String> issues = aFilterAndItsIssues.getValue();
 
-//					html.append("<h3>Filter ID</h3><p>");
-//					html.append(filterID);
-//					html.append("</p>");
-
-				html.append("<h3>Filter Name</h3><p>");
+				html.append("<h3>");
 				html.append(filterID);
-				html.append("</p>");
+				html.append("</h3>");
 
 				html.append("<h3>Issues (<span style='color:red'>");
 				html.append(issues.size());
