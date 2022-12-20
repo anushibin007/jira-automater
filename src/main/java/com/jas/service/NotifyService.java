@@ -143,18 +143,23 @@ public class NotifyService {
 			String mailId = entrySet.getKey();
 
 			if (mailId == null || mailId.isEmpty()) {
-				logger.warn("Not sending mail to empty mail ID");
+				logger.warn("Not sending mail to empty mail ID.");
 				continue;
 			}
 
 			if (!mailRecepService.getSafeRecipients().contains(mailId)) {
-				logger.debug("Skipping mail to [" + mailId + "]");
+				logger.debug("mailId[" + mailId + "] was not found in the safe recipients list. Skipping.");
 				continue;
 			}
 
 			logger.debug("Building mail for [" + mailId + "]");
 
 			Map<String, List<String>> existingIssuesForAnUser = entrySet.getValue();
+
+			if (existingIssuesForAnUser.isEmpty()) {
+				logger.debug("mailId[" + mailId + "] had no issues. Skipping.");
+				continue;
+			}
 
 			MailDetails mail = new MailDetails();
 			mail.setRecipient(mailId);
@@ -164,7 +169,7 @@ public class NotifyService {
 			html.append(mailId);
 			html.append(" on ");
 			html.append(date.toString());
-			html.append("</h2>");
+			html.append("</h2><hr/>");
 			for (Entry<String, List<String>> aFilterAndItsIssues : existingIssuesForAnUser.entrySet()) {
 
 				String filterID = aFilterAndItsIssues.getKey();
