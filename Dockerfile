@@ -5,7 +5,7 @@ WORKDIR /tmp/jira-automater
 ARG JAVA_OPTS
 ENV JAVA_OPTS=$JAVA_OPTS
 COPY . .
-RUN mvn package -Dmaven.test.skip=true
+RUN mvn clean test package
 
 FROM eclipse-temurin:8-jre-alpine as runner
 COPY --from=builder /tmp/jira-automater/target/jira-automater-0.0.1-SNAPSHOT.jar jira-automater.jar
