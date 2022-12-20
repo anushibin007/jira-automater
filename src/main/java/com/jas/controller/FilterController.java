@@ -1,8 +1,5 @@
 package com.jas.controller;
 
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +38,10 @@ public class FilterController {
 		return filterServ.getFilterResult(filterID);
 	}
 
-	@RequestMapping(value = "/notify", method = RequestMethod.GET)
-	public Map<String, List<String>> notify(@RequestParam("filterID") long filterID) {
-		return notifyServ.notifyFilterSatisfiers(filterID);
-	}
+//	@RequestMapping(value = "/notify", method = RequestMethod.GET)
+//	public Map<String, List<String>> notify(@RequestParam("filterID") long filterID) {
+//		return notifyServ.getUsersSatisfyingFilterId(filterID);
+//	}
 
 	@RequestMapping(value = "/notifyAllFilterSatisfiers", method = RequestMethod.GET)
 	public String notifyAllFilterSatisfiers() {
