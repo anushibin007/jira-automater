@@ -1,5 +1,7 @@
 package com.jas.util;
 
+import java.util.Base64;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,6 +33,10 @@ public class JiraAutomaterServerPropService implements Constants {
 
 	public String getPassword() {
 		return password;
+	}
+
+	public String getPasswordDecoded() {
+		return new String(Base64.getDecoder().decode(password.trim())).trim();
 	}
 
 	public void setPassword(String password) {

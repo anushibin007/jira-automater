@@ -26,9 +26,13 @@ public class JiraClientService {
 		try {
 			client = new AsynchronousJiraRestClientFactory().createWithBasicHttpAuthentication(
 					new URI(jiraAutomaterProps.getUrl()), jiraAutomaterProps.getUsername(),
-					jiraAutomaterProps.getPassword());
+					jiraAutomaterProps.getPasswordDecoded());
 		} catch (URISyntaxException e) {
+			client = null;
 			e.printStackTrace();
+		} catch (Exception e) {
+			client = null;
+			throw e;
 		}
 		return client;
 	}
