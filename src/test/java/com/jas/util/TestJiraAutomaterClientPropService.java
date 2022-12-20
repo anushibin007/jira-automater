@@ -18,7 +18,7 @@ public class TestJiraAutomaterClientPropService {
 	@Autowired
 	JiraAutomaterClientPropService bean;
 
-	private List<Object> expectedFilterIdsToWatch = null;
+	private List<String> expectedFilterIdsToWatch = null;
 	private Map<String, String> expectedJql = null;
 
 	TestJiraAutomaterClientPropService() {
