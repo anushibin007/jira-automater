@@ -32,4 +32,4 @@ Here are the steps to setup a development environment for jira-automater:
 1. Fork this repo and clone it to your localhost
 2. Copy [application.properties](src/main/resources/application.properties) and name it to `application-dev.properties`
 3. Update all the configuration properties to this file. This file is not version-tracked and can be used for development purposes.
-4. Run [startApp.cmd](./startApp-dev.cmd) to start the Development Server.
+4. Run [startApp-dev.cmd](./startApp-dev.cmd) to start the Development Server.
