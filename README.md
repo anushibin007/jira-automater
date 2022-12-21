@@ -1,5 +1,7 @@
 # JIRA Automater
 
+![docker-image workflow](https://github.com/anushibin007/jira-automater/actions/workflows/docker-image.yml/badge.svg?branch=master)
+
 This is a Spring Boot based application that can be set up to run 24\*7 and send out mail notifications to recepients that satisfy the configured JQL strings or JIRA Filter IDs.
 
 This project was developed as a side project to notify teammates about subtle items they might have missed. For example:
